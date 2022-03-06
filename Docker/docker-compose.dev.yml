@@ -1,0 +1,17 @@
+version: '3'
+services:
+  react-app:
+    volumes:
+      - /home/senpai/Desktop/JS_Projects/web/client:/app/client:ro
+      - /app/client/node_modules
+
+  express-app:
+    build:
+      args:
+        - NODE_ENV=DEV
+    volumes:
+      - /home/senpai/Desktop/JS_Projects/web/Server:/app/server:ro
+      - /app/server/node_modules
+    command: npm start
+
+  

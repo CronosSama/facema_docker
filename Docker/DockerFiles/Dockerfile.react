@@ -1,0 +1,7 @@
+FROM node:14.17.3-alpine3.14
+WORKDIR /app/client
+RUN apk add bash
+COPY package-lock.json .
+COPY package.json .
+RUN npm install
+COPY . .

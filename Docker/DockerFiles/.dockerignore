@@ -1,0 +1,4 @@
+/home/senpai/Desktop/JS_Projects/web/client/node_modules
+/home/senpai/Desktop/JS_Projects/web/Server/node_modules
+Dockerfile*
+.dockerignore

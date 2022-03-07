@@ -1,8 +1,13 @@
 version: '3'
 services:
+  nginx:
+    ports:
+      - "8080:80"
+
+
   react-app:
     volumes:
-      - /home/senpai/Desktop/JS_Projects/web/client:/app/client:ro
+      - $PWD/client:/app/client:ro
       - /app/client/node_modules
 
   express-app:
@@ -10,7 +15,7 @@ services:
       args:
         - NODE_ENV=DEV
     volumes:
-      - /home/senpai/Desktop/JS_Projects/web/Server:/app/server:ro
+      -  $PWD/Server:/app/server:ro
       - /app/server/node_modules
     command: npm start
 

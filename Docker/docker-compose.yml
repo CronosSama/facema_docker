@@ -2,37 +2,32 @@ version: '3'
 services:
   react-app:
     build: 
-      context: /home/senpai/Desktop/JS_Projects/web/client/
-      dockerfile: /home/senpai/Desktop/JS_Projects/web/Docker/DockerFiles/Dockerfile.react
-    ports:
-      - "8080:3000"
-
+      context: $PWD/client/
+      dockerfile: $PWD/Docker/DockerFiles/Dockerfile.react
+    depends_on:
+      - nginx
+      - mongo
+      - express-app
     environment:
       - PORT=3000
     command: npm start
-      
   express-app:
     #the path where the DockerFile
     build: 
-      context: /home/senpai/Desktop/JS_Projects/web/Server/
-      dockerfile: /home/senpai/Desktop/JS_Projects/web/Docker/DockerFiles/Dockerfile.express
-    ports:
-      - "1999:3001"
-
+      context: $PWD/Server/
+      dockerfile: $PWD/Docker/DockerFiles/Dockerfile.express
     environment:
       - PORT=3001
-
-
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - $PWD/nginx/default.conf:/etc/nginx/conf.d/default.conf
   mongo:
     image: mongo:4.4.6-bionic
     volumes:
       - mongodb_volume:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=mohammed
+      - MONGO_INITDB_ROOT_USERNAME=mohammed_bouassida
       - MONGO_INITDB_ROOT_PASSWORD=Tri_201
-      - MONGO_INITDB_DATABASE=facema
-    ports:
-      - "2017:27017"
-
 volumes:
   mongodb_volume:

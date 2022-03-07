@@ -27,6 +27,8 @@ app.use("/api/user/:user_id/messages/:message_id/comments",Authentification,Auth
 
 app.use("/api/user/:user_id/content/:content_id/Like",Authentification,AuthorizationLike,Likes)
 // GET ALL MESSAGES
+console.log("REQUEST HAVE COME TO ME !!!")
+
 app.get("/api/messages",Authentification,async (req,res,next)=>{
     try{
     const foundMessages = await db.Message.find().sort({createdAt: "desc" }).populate("user",{

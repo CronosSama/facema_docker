@@ -5,3 +5,6 @@ services:
       args:
         - NODE_ENV=PROD
     command: node index.js
+  nginx:
+    ports:
+      - "80:80"

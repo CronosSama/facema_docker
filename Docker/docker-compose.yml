@@ -1,17 +1,20 @@
 version: '3'
 services:
   react-app:
+    restart: always
+    networks:
+      - react_network
     build: 
       context: $PWD/client/
       dockerfile: $PWD/Docker/DockerFiles/Dockerfile.react
-    depends_on:
-      - nginx
-      - mongo
-      - express-app
     environment:
       - PORT=3000
     command: npm start
   express-app:
+    restart: always
+    networks:
+      - express_network
+      - database_network
     #the path where the DockerFile
     build: 
       context: $PWD/Server/
@@ -19,15 +22,84 @@ services:
     environment:
       - PORT=3001
   nginx:
+    container_name: nginx
+    restart: always
+    networks:
+      - express_network
+      - react_network
     image: nginx:alpine
     volumes:
       - $PWD/nginx/default.conf:/etc/nginx/conf.d/default.conf
-  mongo:
+
+  mongo_1:
+    restart: always
     image: mongo:4.4.6-bionic
+    container_name: mongo_1
     volumes:
-      - mongodb_volume:/data/db
+      - mongodb_volume_1:/data/db
+      - $PWD/db/replica_set_db.sh:/scripts/replica_set_db.sh:ro
+    networks:
+      - database_network
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mohammed_bouassida
       - MONGO_INITDB_ROOT_PASSWORD=Tri_201
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "database_replica_set" ]
+  mongo_2:
+    restart: always
+    image: mongo:4.4.6-bionic
+    container_name: mongo_2
+    volumes:
+      - mongodb_volume_2:/data/db
+    networks:
+      - database_network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mohammed_bouassida
+      - MONGO_INITDB_ROOT_PASSWORD=Tri_201
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "database_replica_set" ]
+  mongo_3:
+    restart: always
+    image: mongo:4.4.6-bionic
+    container_name: mongo_3
+    volumes:
+      - mongodb_volume_3:/data/db
+    networks:
+      - database_network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mohammed_bouassida
+      - MONGO_INITDB_ROOT_PASSWORD=Tri_201
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "database_replica_set" ]
+
+  mongo_arb_1:
+    restart: always
+    image: mongo:4.4.6-bionic
+    container_name: mongo_arb_1
+    networks:
+      - database_network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mohammed_bouassida
+      - MONGO_INITDB_ROOT_PASSWORD=Tri_201
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "database_replica_set" ]
+
+  mongo_arb_2:
+    restart: always
+    image: mongo:4.4.6-bionic
+    container_name: mongo_arb_2
+    networks:
+      - database_network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mohammed_bouassida
+      - MONGO_INITDB_ROOT_PASSWORD=Tri_201
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "database_replica_set" ]
+
+
+networks:
+  database_network:
+  react_network:
+  express_network:
+
 volumes:
-  mongodb_volume:
+  mongodb_volume_1:
+  mongodb_volume_2:
+  mongodb_volume_3:
+  mongodb_volume_4:
+

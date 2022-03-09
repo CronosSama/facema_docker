@@ -3,13 +3,10 @@ services:
   nginx:
     ports:
       - "8080:80"
-
-
   react-app:
     volumes:
       - $PWD/client:/app/client:ro
       - /app/client/node_modules
-
   express-app:
     build:
       args:
@@ -18,5 +15,18 @@ services:
       -  $PWD/Server:/app/server:ro
       - /app/server/node_modules
     command: npm start
-
-  
+  mongo_1:
+    ports:
+      - "2011:27017"
+  mongo_2:
+    ports:
+      - "2012:27017"
+  mongo_3:
+    ports:
+      - "2013:27017"
+  mongo_arb_1:
+    ports:
+      - "2014:27017"
+  mongo_arb_2:
+    ports:
+      - "2015:27017"
